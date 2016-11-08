@@ -2,9 +2,10 @@
 import numpy as np
 from sklearn import linear_model
 from sklearn import svm
-from sklearn import tree
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
+from sklearn.ensemble import AdaBoostRegressor
 from sklearn.model_selection import cross_val_score
 
 dataSetXTrain = []
@@ -33,7 +34,7 @@ regr = linear_model.LinearRegression()
 
 #regr.fit(dataSetXTrain, dataSetYTrain)
 
-scores = cross_val_score(regr, dataSetXTrain, dataSetYTrain, scoring='neg_mean_squared_error')
+scores = cross_val_score(regr, X = dataSetXTrain, y = dataSetYTrain)
 
 print(scores.mean())
 
@@ -46,22 +47,33 @@ print(scores.mean())
 clf = svm.SVR(kernel='rbf', C=1e3, gamma=0.1)
 
 #clf.fit(dataSetXTrain, dataSetYTrain)
-scores = cross_val_score(clf, dataSetXTrain, dataSetYTrain, scoring='neg_mean_squared_error')
+scores = cross_val_score(clf, X = dataSetXTrain, y = dataSetYTrain)
 print(scores.mean())
 
 
 #print(mean_squared_error(dataSetYTest, clf.predict(dataSetXTest)))
 
-clf1 = tree.DecisionTreeRegressor()
+clf1 = DecisionTreeRegressor()
 #clf1.fit(dataSetXTrain, dataSetYTrain)
-scores = cross_val_score(clf1, dataSetXTrain, dataSetYTrain, scoring='neg_mean_squared_error')
+scores = cross_val_score(clf1, X = dataSetXTrain, y = dataSetYTrain)
 print(scores.mean())
 
 #print(mean_squared_error(dataSetYTest, clf1.predict(dataSetXTest)))
 
-#clf2 = RandomForestClassifier(n_estimators=10, max_depth=None, min_samples_split=2, random_state=0)
+clf2 = RandomForestRegressor()
 
 #clf2.fit(dataSetXTrain, dataSetYTrain)
+
+scores = cross_val_score(clf2, X = dataSetXTrain, y = dataSetYTrain)
+print(scores.mean())
+
+clf3 = AdaBoostRegressor(DecisionTreeRegressor(max_depth=4),
+                          n_estimators=300, random_state=np.random.RandomState(1))
+
+#clf2.fit(dataSetXTrain, dataSetYTrain)
+
+scores = cross_val_score(clf3, X = dataSetXTrain, y = dataSetYTrain)
+print(scores.mean())
 
 #print(mean_squared_error(dataSetYTest, clf2.predict(dataSetXTest)))
 
